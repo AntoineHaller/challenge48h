@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config.from_object("project.config.Config")
 
 from .forms import PatientForm, MedicForm
+from  .utils import *
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
@@ -29,4 +30,10 @@ def medic():
     form = MedicForm(request.form)
     patho_id = (request.form.get("pathology"))
     user_id = (request.form.get("user"))
-    return render_template("medic.html", name="Ynov", pathology=patho_id, user=user_id)
+    user_name = getUserName(user_id)
+    patho_name = getPathologyName(patho_id)
+    results = getPathologyIcd10(patho_id)
+    icd10_final = [str(icd10) for icd10 in results]
+
+    return render_template("medic.html", name="Ynov", pathology=patho_name, user=user_name, icd=icd10_final)
+
